@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingActivity">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="57dp"
+        android:layout_height="70dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/textView"
+        app:srcCompat="@android:drawable/ic_menu_info_details" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="200dp"
+        android:layout_height="70dp"
+        android:layout_above="@+id/textView2"
+        android:layout_centerHorizontal="true"
+        android:text="설정" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="200dp"
+        android:layout_height="46dp"
+        android:layout_above="@+id/radioGroup"
+        android:layout_centerHorizontal="true"
+        android:text="음식점 추천 기준" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/rb_distance"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="거리" />
+
+        <RadioButton
+            android:id="@+id/rb_review"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="리뷰" />
+
+        <RadioButton
+            android:id="@+id/rb_avgscore"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="평점" />
+
+        <RadioButton
+            android:id="@+id/rb_opendate"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="개점 날짜" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/editProfileButton"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="157dp"
+        android:text="프로필 편집" />
+
+    <Button
+        android:id="@+id/registerFavoriteButton"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editProfileButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-157dp"
+        android:text="맛집 등록" />
+
+    <Button
+        android:id="@+id/myFavoriteButton"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/registerFavoriteButton"
+        android:layout_centerHorizontal="true"
+        android:text="나의 음식점" />
+
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/myFavoriteButton"
+        android:layout_centerHorizontal="true"
+        android:text="로그아웃" />
+
+    <ImageButton
+        android:id="@+id/backToMainButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        app:srcCompat="@drawable/ic_action_name" />
+
+</RelativeLayout>
