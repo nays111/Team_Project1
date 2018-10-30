@@ -21,6 +21,7 @@ public class SettingActivity extends AppCompatActivity {
 
         ImageButton backToMainButton = (ImageButton) findViewById(R.id.backToMainButton);
 
+
         /*뒤로가기 버튼을 클릭하면 메인화면으로 돌아감.*/
         backToMainButton.setOnClickListener(new View.OnClickListener() {
             @Override
