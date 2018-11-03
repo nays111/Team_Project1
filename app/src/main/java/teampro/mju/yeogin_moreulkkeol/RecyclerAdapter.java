@@ -67,6 +67,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 }
 
+public void setDatails(Context ctx, String title,String image)
 
 
 class Item {

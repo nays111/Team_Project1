@@ -8,6 +8,11 @@ import android.widget.TextView;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+
+
 public class LoginActivity extends AppCompatActivity {
 
     @Override
@@ -19,6 +24,9 @@ public class LoginActivity extends AppCompatActivity {
         EditText passwordText = (EditText) findViewById(R.id.passwordText);
         Button loginButton = (Button) findViewById(R.id.loginButton);
         TextView registerButton = (TextView) findViewById(R.id.registerButton);
+
+
+
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override

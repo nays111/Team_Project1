@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RegisterActivity">
-
     <EditText
+
         android:id="@+id/idText"
         android:layout_width="191dp"
         android:layout_height="45dp"
@@ -14,7 +14,9 @@
         android:layout_toEndOf="@+id/textView6"
         android:ems="10"
         android:hint="아이디를 입력하세요"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+
+        />
 
     <EditText
         android:id="@+id/passwordText"

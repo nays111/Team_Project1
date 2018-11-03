@@ -32,10 +32,16 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference mRef;
 
     // 현재 GPS 사용유무
     boolean isGPSEnabled = false;
@@ -91,6 +97,10 @@ public class MainActivity extends AppCompatActivity {
 //        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(mLayoutManager);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        mRef = firebaseDatabase.getReference("이름");
+
 
 
         List<Item> items = new ArrayList<>();
