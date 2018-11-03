@@ -35,9 +35,7 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".SettingActivity" />
         <activity android:name=".Main2Activity" />
-        <activity android:name=".SearchActivity" />
-        <activity android:name=".DetailActivity" />
-        <activity android:name=".ReviewActivity"></activity>
+        <activity android:name=".SearchActivity"></activity>
     </application>
 
 </manifest>

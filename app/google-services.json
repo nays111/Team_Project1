@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "850428478454",
+    "firebase_url": "https://yeoginmoreulkkeol.firebaseio.com",
+    "project_id": "yeoginmoreulkkeol",
+    "storage_bucket": "yeoginmoreulkkeol.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:850428478454:android:5e387ae1faf22f0b",
+        "android_client_info": {
+          "package_name": "teampro.mju.yeogin_moreulkkeol"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "850428478454-5pg6lf4h1tt0r1vga7slhl3frkl751pp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgqH4nipDpIXKhZPAHYXs8wW6a_3PXcdE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
