@@ -25,13 +25,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-=======
+//=======
 import java.io.IOException;
->>>>>>> origin/master
+//>>>>>>> origin/master
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
