@@ -2,6 +2,7 @@ package teampro.mju.yeogin_moreulkkeol;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -9,9 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -35,11 +39,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Item item = items.get(position);
-        Drawable drawable = ContextCompat.getDrawable(context, item.getImage());
+        // 카드뷰의 각 리스트의 값을 넣는다.
+        // 사진, 음식점이름, 카테고리, 등록일, 즐겨찾기, 주소
+
+        //Drawable drawable = ContextCompat.getDrawable(context, R.drawable.ic_action_name);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            holder.image.setBackground(drawable);
+            //holder.image.setBackground(drawable);
+
+            //Glide라이브러리로 이미지 로딩
+            Glide.with(context)
+                    .load(item.getImageSrc())
+                    .into(holder.image);
         }
         holder.title.setText(item.getTitle());
+        holder.date.setText(item.getDate());
+        holder.category.setText(item.getCategory());
+        holder.address.setText(item.getAddress());
+        //holder.bookmark.setImageDrawable(drawable);
+
         holder.cardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,14 +73,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
-        TextView title;
+        TextView title,category,date,address;
+        ImageButton bookmark;
         CardView cardview;
 
         public ViewHolder(View itemView) {
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.image);
             title = (TextView) itemView.findViewById(R.id.title);
+            category = (TextView) itemView.findViewById(R.id.category);
+            date = (TextView) itemView.findViewById(R.id.date);
+            address = (TextView) itemView.findViewById(R.id.address);
+            bookmark = (ImageButton) itemView.findViewById(R.id.bookmark);
             cardview = (CardView) itemView.findViewById(R.id.cardview);
+
         }
     }
 }
@@ -70,19 +94,69 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 public void setDatails(Context ctx, String title,String image)
 
 
-class Item {
-    int image;
-    String title;
 
-    int getImage() {
-        return this.image;
+// 음식점 아이템 클래스
+class Item {
+    String imageSrc;
+    String title;
+    String address;
+    String date;
+    String category;
+    boolean bookmark;
+
+    boolean getbookmark() {
+        return this.bookmark;
     }
+    void setbookmark(boolean bookmark){ this.bookmark = bookmark;}
+
+
+    String getAddress() {
+        return this.address;
+    }
+    void setAddress(String address){ this.address =address;}
+
+    String getDate() {
+        return this.date;
+    }
+    void setDate(String date){ this.date =date;}
+
+    String getCategory() {
+        return this.category;
+    }
+    void setCategory(String address){ this.category =category;}
+
+    String getImageSrc() {
+        return this.imageSrc;
+    }
+    void setImageSrc(String imageSrc) {
+         this.imageSrc = imageSrc;
+    }
+
+
     String getTitle() {
         return this.title;
     }
-
-    Item(int image, String title) {
-        this.image = image;
+    void setTitle(String title) {
         this.title = title;
+    }
+
+    Item(String imageSrc, String title) {
+        this.imageSrc = imageSrc;
+        this.title = title;
+
+    }
+    Item(String imageSrc,
+         String title,
+         String date,
+         String category,
+         String address,
+         boolean bookmark) {
+        this.imageSrc = imageSrc;
+        this.title = title;
+        this.address = address;
+        this.category = category;
+        this.date = date;
+        this.bookmark = bookmark;
+
     }
 }

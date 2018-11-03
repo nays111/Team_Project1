@@ -48,7 +48,6 @@ public class GpsInfo extends Service implements LocationListener {
         getLocation();
     }
 
-    @TargetApi(23)
     public Location getLocation() {
         if (Build.VERSION.SDK_INT >= 23 &&
                 ContextCompat.checkSelfPermission(
@@ -83,8 +82,8 @@ public class GpsInfo extends Service implements LocationListener {
                 if (isNetworkEnabled) {
                     locationManager.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,
-                            MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                            1,
+                            1, this);
 
                     if (locationManager != null) {
                         location = locationManager
@@ -101,8 +100,8 @@ public class GpsInfo extends Service implements LocationListener {
                     if (location == null) {
                         locationManager.requestLocationUpdates(
                                 LocationManager.GPS_PROVIDER,
-                                MIN_TIME_BW_UPDATES,
-                                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                                1,
+                                1, this);
                         if (locationManager != null) {
                             location = locationManager
                                     .getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -113,6 +112,7 @@ public class GpsInfo extends Service implements LocationListener {
                         }
                     }
                 }
+                Log.d("isGPSEnabled","lat : "+lat+"\nlon : "+lon);
             }
 
         } catch (Exception e) {
@@ -204,8 +204,8 @@ public class GpsInfo extends Service implements LocationListener {
         //Gps 위치제공자에 의한 위치변화. 오차범위가 좁다.
         //Network 위치제공자에 의한 위치변화
         //Network 위치는 Gps에 비해 정확도가 많이 떨어진다.
-        Toast.makeText(getApplicationContext(), "위치정보 : " + provider + "\n위도 : " + longitude + "\n경도 : " + latitude
-                + "\n고도 : " + altitude + "\n정확도 : " + accuracy, Toast.LENGTH_LONG);
+//        Toast.makeText(getApplicationContext(), "위치정보 : " + provider + "\n위도 : " + longitude + "\n경도 : " + latitude
+//                + "\n고도 : " + altitude + "\n정확도 : " + accuracy, Toast.LENGTH_LONG);
 
     }
 
