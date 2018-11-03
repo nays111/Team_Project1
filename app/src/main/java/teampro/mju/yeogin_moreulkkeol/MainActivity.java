@@ -3,37 +3,32 @@ package teampro.mju.yeogin_moreulkkeol;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -69,38 +64,45 @@ public class MainActivity extends AppCompatActivity {
 
     // GPSTracker class
     private GpsInfo gps;
-
-
+    EditText et_searchWord;
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
         final int ITEM_SIZE = 5;
 
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        //검색부분
+        et_searchWord = findViewById(R.id.searchWord) ;
+
+
+        //음식점 리스트 부분
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
 
         GridLayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
-
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(mLayoutManager);
 
 
         List<Item> items = new ArrayList<>();
         Item[] item = new Item[ITEM_SIZE];
-        item[0] = new Item(R.drawable.ic_dashboard_black_24dp, "#1");
-        item[1] = new Item(R.drawable.ic_dashboard_black_24dp, "#2");
-        item[2] = new Item(R.drawable.ic_dashboard_black_24dp, "#3");
-        item[3] = new Item(R.drawable.ic_dashboard_black_24dp, "#4");
-        item[4] = new Item(R.drawable.ic_dashboard_black_24dp, "#5");
-
+        item[0] = new Item("https://www.google.co.kr/maps/uv?hl=ko&pb=!1s0x357b4935cb351885:0x5793b3bf178f8603!2m22!2m2!1i80!2i80!3m1!2i20!16m16!1b1!2m2!1m1!1e1!2m2!1m1!1e3!2m2!1m1!1e5!2m2!1m1!1e4!2m2!1m1!1e6!3m1!7e115!4shttps://lh5.googleusercontent.com/p/AF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v%3Dw325-h218-n-k-no!5z66eb7KeRIC0gR29vZ2xlIOqygOyDiQ&imagekey=!1e10!2sAF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v",
+         "안골식당","2018-11-03","한식","경기도 용인시 기흥구 고매동 227-1번지 ",true);
+        item[1] = new Item("https://www.google.co.kr/maps/uv?hl=ko&pb=!1s0x357b4935cb351885:0x5793b3bf178f8603!2m22!2m2!1i80!2i80!3m1!2i20!16m16!1b1!2m2!1m1!1e1!2m2!1m1!1e3!2m2!1m1!1e5!2m2!1m1!1e4!2m2!1m1!1e6!3m1!7e115!4shttps://lh5.googleusercontent.com/p/AF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v%3Dw325-h218-n-k-no!5z66eb7KeRIC0gR29vZ2xlIOqygOyDiQ&imagekey=!1e10!2sAF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v",
+                "안골식당","2018-11-03","한식","경기도 용인시 기흥구 고매동 227-1번지 ",true);
+        item[2] = new Item("https://www.google.co.kr/maps/uv?hl=ko&pb=!1s0x357b4935cb351885:0x5793b3bf178f8603!2m22!2m2!1i80!2i80!3m1!2i20!16m16!1b1!2m2!1m1!1e1!2m2!1m1!1e3!2m2!1m1!1e5!2m2!1m1!1e4!2m2!1m1!1e6!3m1!7e115!4shttps://lh5.googleusercontent.com/p/AF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v%3Dw325-h218-n-k-no!5z66eb7KeRIC0gR29vZ2xlIOqygOyDiQ&imagekey=!1e10!2sAF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v",
+                "안골식당","2018-11-03","한식","경기도 용인시 기흥구 고매동 227-1번지 ",true);
+        item[3] = new Item("https://www.google.co.kr/maps/uv?hl=ko&pb=!1s0x357b4935cb351885:0x5793b3bf178f8603!2m22!2m2!1i80!2i80!3m1!2i20!16m16!1b1!2m2!1m1!1e1!2m2!1m1!1e3!2m2!1m1!1e5!2m2!1m1!1e4!2m2!1m1!1e6!3m1!7e115!4shttps://lh5.googleusercontent.com/p/AF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v%3Dw325-h218-n-k-no!5z66eb7KeRIC0gR29vZ2xlIOqygOyDiQ&imagekey=!1e10!2sAF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v",
+                "안골식당","2018-11-03","한식","경기도 용인시 기흥구 고매동 227-1번지 ",true);
+        item[4] = new Item("https://www.google.co.kr/maps/uv?hl=ko&pb=!1s0x357b4935cb351885:0x5793b3bf178f8603!2m22!2m2!1i80!2i80!3m1!2i20!16m16!1b1!2m2!1m1!1e1!2m2!1m1!1e3!2m2!1m1!1e5!2m2!1m1!1e4!2m2!1m1!1e6!3m1!7e115!4shttps://lh5.googleusercontent.com/p/AF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v%3Dw325-h218-n-k-no!5z66eb7KeRIC0gR29vZ2xlIOqygOyDiQ&imagekey=!1e10!2sAF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v",
+                "안골식당","2018-11-03","한식","경기도 용인시 기흥구 고매동 227-1번지 ",true);
         for (int i = 0; i < ITEM_SIZE; i++) {
             items.add(item[i]);
         }
@@ -111,7 +113,19 @@ public class MainActivity extends AppCompatActivity {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 //        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,this);
 
+
+        //위치정보 가져오기
+        GPSConnetion();
     }
+
+    //검색어를 받아 음식점 정보를 카드뷰에 뿌려준다
+    public void  onClickSearch(View v){
+
+        String query = et_searchWord.getText().toString();
+        Toast.makeText(this,query+"",Toast.LENGTH_LONG).show();
+        et_searchWord.setText(null);
+    }
+
 
     @Override
     protected void onResume() {
@@ -137,17 +151,62 @@ public class MainActivity extends AppCompatActivity {
         // GPS 사용유무 가져오기
         if (gps.isGetLocation()) {
 
-            Toast.makeText(
-                    getApplicationContext(),
-                    "당신의 위치 - \n위도: " + gps.getLatitude() + "\n경도: " + gps.getLongitude(),
-                    Toast.LENGTH_LONG).show();
 
-            setTitle("당신의 위치 - \n위도: " +  gps.getLatitude() + "\n경도: " +  gps.getLongitude());
+
+            //gps정보를 주소로 변환
+            String address = getAddress(getApplicationContext(),gps.getLatitude(),gps.getLongitude());
+            et_searchWord.setText(address);
+
+//            Toast.makeText(
+//                    getApplicationContext(),
+//                    gps.getLatitude()+" / "+gps.getLongitude(),
+//                    Toast.LENGTH_LONG).show();
+//
+
+//            Toast.makeText(
+//                    getApplicationContext(),
+//                    address,
+//                    Toast.LENGTH_LONG).show();
+
+
+
         } else {
             // GPS 를 사용할수 없으므로
             gps.showSettingsAlert();
         }
 
+    }
+
+    //gps정보를 주소로 변환
+    public static String getAddress(Context mContext,double lat, double lng) {
+        String nowAddress ="현재 위치를 확인 할 수 없습니다.";
+        Geocoder geocoder = new Geocoder(mContext, Locale.KOREA);
+
+        List <Address> address;
+        try {
+            if (geocoder != null) {
+
+                //세번째 파라미터는 좌표에 대해 주소를 리턴 받는 갯수로
+                //한좌표에 대해 두개이상의 이름이 존재할수있기에 주소배열을 리턴받기 위해 최대갯수 설정
+                address = geocoder.getFromLocation(lat, lng, 1);
+                Log.d("geocoder","getFromLocation");
+                if (address != null && address.size() > 0) {
+                    // 주소 받아오기
+                    String currentLocationAddress = address.get(0).getAddressLine(0);
+                    nowAddress  = currentLocationAddress;
+                    Log.d("geocoder",nowAddress);
+                }
+            }else{
+                Log.e("geocoder",null);
+            }
+
+
+        } catch (IOException e) {
+            Log.e("getAddress()", "주소를 가져 올 수 없습니다.");
+            nowAddress = "주소를 가져 올 수 없습니다.";
+            e.printStackTrace();
+        }
+        return nowAddress;
     }
 
     @Override
@@ -194,6 +253,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //ToolBar에 menu.xml을 인플레이트
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //return super.onCreateOptionsMenu(menu);
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // 설정 버튼 이벤트 처리
+        //return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // User chose the "Settings" item, show the app settings UI...
+                Toast.makeText(getApplicationContext(), "환경설정 버튼 클릭됨", Toast.LENGTH_LONG).show();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                Toast.makeText(getApplicationContext(), "나머지 버튼 클릭됨", Toast.LENGTH_LONG).show();
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
 }
 
 

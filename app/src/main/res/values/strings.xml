@@ -1,12 +1,15 @@
 <resources>
 
-    <string name="app_name">yeaogin_moreulkkeol</string>
+    <string name="app_name">여긴 모를껄?</string>
+    <string name="app_label">label</string>
+    <string name="search_hint">검색어를 입력하세요.</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="et_searchWord">검색어를 입력하세요.</string>
 
 
 </resources>
