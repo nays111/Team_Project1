@@ -96,8 +96,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 }
 
-public void setDatails(Context ctx, String title,String image)
-
 
 
 // 음식점 아이템 클래스

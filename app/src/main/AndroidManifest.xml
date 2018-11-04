@@ -19,11 +19,6 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".LoginActivity">
             <intent-filter>
@@ -35,6 +30,8 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".SettingActivity" />
         <activity android:name=".Main2Activity" />
+        <activity android:name=".detailed_page" />
+        <activity android:name=".review" />
         <activity android:name=".SearchActivity"></activity>
     </application>
 

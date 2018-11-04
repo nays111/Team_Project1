@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                 adapter.items.clear();
 
                 // 가져온 데이터를 리스트에 음식점리스트에 추가한다.
-                for (int i = 0; i < ITEM_SIZE; i++) {
+                for (int i = 1; i < ITEM_SIZE; i++) {
                     DataSnapshot ds = dataSnapshot.child(i+"");
                     address = ds.child("address").getValue(String.class);
                     image = ds.child("image").getValue(String.class);
