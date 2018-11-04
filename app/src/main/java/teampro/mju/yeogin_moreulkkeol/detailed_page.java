@@ -17,13 +17,22 @@ import android.widget.Toast;
 
 public class detailed_page extends AppCompatActivity {
 
-
+    Button btn_writeComment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_page);
 
         Button button = (Button)findViewById(R.id.map);
+        btn_writeComment = findViewById(R.id.review_button);
+
+        btn_writeComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(detailed_page.this,review.class);
+                startActivity(intent);
+            }
+        });
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

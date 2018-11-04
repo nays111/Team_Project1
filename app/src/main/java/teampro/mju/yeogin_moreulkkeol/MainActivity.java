@@ -1,12 +1,15 @@
 package teampro.mju.yeogin_moreulkkeol;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -151,6 +154,9 @@ public class MainActivity extends AppCompatActivity {
 //                Map<String, Object> map = dataSnapshot.getValue();
 //                key = dataSnapshot.getKey();
 
+
+                adapter.items.clear();
+
                 // 가져온 데이터를 리스트에 음식점리스트에 추가한다.
                 for (int i = 0; i < ITEM_SIZE; i++) {
                     DataSnapshot ds = dataSnapshot.child(i+"");
@@ -202,8 +208,11 @@ public class MainActivity extends AppCompatActivity {
     public void  onClickSearch(View v){
 
         String query = et_searchWord.getText().toString();
+
         Toast.makeText(this,query+"",Toast.LENGTH_LONG).show();
         et_searchWord.setText(null);
+
+
     }
 
 
@@ -211,7 +220,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        adapter.items.clear();
 
         //위치정보 가져오기
         GPSConnetion();

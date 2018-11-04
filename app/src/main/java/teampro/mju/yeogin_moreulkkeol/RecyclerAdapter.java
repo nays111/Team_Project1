@@ -1,6 +1,7 @@
 package teampro.mju.yeogin_moreulkkeol;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -62,6 +63,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, item.getTitle(), Toast.LENGTH_SHORT).show();
+
+
+                Intent intent = new Intent(context,detailed_page.class);
+                context.startActivity(intent);
             }
         });
     }
