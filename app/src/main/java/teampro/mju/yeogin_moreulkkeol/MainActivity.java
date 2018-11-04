@@ -8,6 +8,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,22 +26,24 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-<<<<<<< HEAD
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-=======
 import java.io.IOException;
->>>>>>> origin/master
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference mRef;
-
+    DatabaseReference mRootRef;
+    DatabaseReference ChildRef;
     // 현재 GPS 사용유무
     boolean isGPSEnabled = false;
 
@@ -75,6 +78,12 @@ public class MainActivity extends AppCompatActivity {
     private GpsInfo gps;
     EditText et_searchWord;
     Toolbar toolbar;
+
+    List<Item> items;
+    Item[] item;
+    final int ITEM_SIZE = 20;
+
+    RecyclerAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,8 +92,6 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        final int ITEM_SIZE = 5;
 
 
         //검색부분
@@ -100,36 +107,96 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        mRef = firebaseDatabase.getReference("이름");
+        mRootRef  = firebaseDatabase.getReference();
 
 
+        items = new ArrayList<>();
+        item = new Item[ITEM_SIZE];
 
-        List<Item> items = new ArrayList<>();
-        Item[] item = new Item[ITEM_SIZE];
-        item[0] = new Item("https://www.google.co.kr/maps/uv?hl=ko&pb=!1s0x357b4935cb351885:0x5793b3bf178f8603!2m22!2m2!1i80!2i80!3m1!2i20!16m16!1b1!2m2!1m1!1e1!2m2!1m1!1e3!2m2!1m1!1e5!2m2!1m1!1e4!2m2!1m1!1e6!3m1!7e115!4shttps://lh5.googleusercontent.com/p/AF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v%3Dw325-h218-n-k-no!5z66eb7KeRIC0gR29vZ2xlIOqygOyDiQ&imagekey=!1e10!2sAF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v",
-         "안골식당","2018-11-03","한식","경기도 용인시 기흥구 고매동 227-1번지 ",true);
-        item[1] = new Item("https://www.google.co.kr/maps/uv?hl=ko&pb=!1s0x357b4935cb351885:0x5793b3bf178f8603!2m22!2m2!1i80!2i80!3m1!2i20!16m16!1b1!2m2!1m1!1e1!2m2!1m1!1e3!2m2!1m1!1e5!2m2!1m1!1e4!2m2!1m1!1e6!3m1!7e115!4shttps://lh5.googleusercontent.com/p/AF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v%3Dw325-h218-n-k-no!5z66eb7KeRIC0gR29vZ2xlIOqygOyDiQ&imagekey=!1e10!2sAF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v",
-                "안골식당","2018-11-03","한식","경기도 용인시 기흥구 고매동 227-1번지 ",true);
-        item[2] = new Item("https://www.google.co.kr/maps/uv?hl=ko&pb=!1s0x357b4935cb351885:0x5793b3bf178f8603!2m22!2m2!1i80!2i80!3m1!2i20!16m16!1b1!2m2!1m1!1e1!2m2!1m1!1e3!2m2!1m1!1e5!2m2!1m1!1e4!2m2!1m1!1e6!3m1!7e115!4shttps://lh5.googleusercontent.com/p/AF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v%3Dw325-h218-n-k-no!5z66eb7KeRIC0gR29vZ2xlIOqygOyDiQ&imagekey=!1e10!2sAF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v",
-                "안골식당","2018-11-03","한식","경기도 용인시 기흥구 고매동 227-1번지 ",true);
-        item[3] = new Item("https://www.google.co.kr/maps/uv?hl=ko&pb=!1s0x357b4935cb351885:0x5793b3bf178f8603!2m22!2m2!1i80!2i80!3m1!2i20!16m16!1b1!2m2!1m1!1e1!2m2!1m1!1e3!2m2!1m1!1e5!2m2!1m1!1e4!2m2!1m1!1e6!3m1!7e115!4shttps://lh5.googleusercontent.com/p/AF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v%3Dw325-h218-n-k-no!5z66eb7KeRIC0gR29vZ2xlIOqygOyDiQ&imagekey=!1e10!2sAF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v",
-                "안골식당","2018-11-03","한식","경기도 용인시 기흥구 고매동 227-1번지 ",true);
-        item[4] = new Item("https://www.google.co.kr/maps/uv?hl=ko&pb=!1s0x357b4935cb351885:0x5793b3bf178f8603!2m22!2m2!1i80!2i80!3m1!2i20!16m16!1b1!2m2!1m1!1e1!2m2!1m1!1e3!2m2!1m1!1e5!2m2!1m1!1e4!2m2!1m1!1e6!3m1!7e115!4shttps://lh5.googleusercontent.com/p/AF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v%3Dw325-h218-n-k-no!5z66eb7KeRIC0gR29vZ2xlIOqygOyDiQ&imagekey=!1e10!2sAF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v",
-                "안골식당","2018-11-03","한식","경기도 용인시 기흥구 고매동 227-1번지 ",true);
-        for (int i = 0; i < ITEM_SIZE; i++) {
-            items.add(item[i]);
-        }
-
-        recyclerView.setAdapter(new RecyclerAdapter(getApplicationContext(), items, R.layout.activity_main));
+        adapter = new RecyclerAdapter(getApplicationContext(), items, R.layout.activity_main);
+        recyclerView.setAdapter(adapter);
 
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 //        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,this);
 
 
+        //FireBase에서 데이터 가져오기
+        getDateToFirebaseDB();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         //위치정보 가져오기
         GPSConnetion();
+
+
     }
+
+    void getDateToFirebaseDB(){
+
+        //        mRootRef.push().setValue("shopList");
+        //mRootRef.child("users").child("1").child("2").setValue("v");
+
+
+        //FirebaseDB에서 데이터 가져오기
+//        ChildRef = mRootRef.child("0");
+        mRootRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String address="",name="",image="",menu="";
+                double date = 0,x=0,y=0;
+//                Map<String, Object> map = dataSnapshot.getValue();
+//                key = dataSnapshot.getKey();
+
+                // 가져온 데이터를 리스트에 음식점리스트에 추가한다.
+                for (int i = 0; i < ITEM_SIZE; i++) {
+                    DataSnapshot ds = dataSnapshot.child(i+"");
+                    address = ds.child("address").getValue(String.class);
+                    image = ds.child("image").getValue(String.class);
+                    menu = ds.child("menu").getValue(String.class);
+                    name = ds.child("name").getValue(String.class);
+                    date = ds.child("open_date").getValue(Double.class);
+                    x = ds.child("x").getValue(Double.class);
+                    y = ds.child("y").getValue(Double.class);
+
+
+
+//                    item[i] = new Item("https://www.google.co.kr/maps/uv?hl=ko&pb=!1s0x357b4935cb351885:0x5793b3bf178f8603!2m22!2m2!1i80!2i80!3m1!2i20!16m16!1b1!2m2!1m1!1e1!2m2!1m1!1e3!2m2!1m1!1e5!2m2!1m1!1e4!2m2!1m1!1e6!3m1!7e115!4shttps://lh5.googleusercontent.com/p/AF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v%3Dw325-h218-n-k-no!5z66eb7KeRIC0gR29vZ2xlIOqygOyDiQ&imagekey=!1e10!2sAF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v",
+//                            "안골식당","2018-11-03","한식","경기도 용인시 기흥구 고매동 227-1번지 ",true);
+                    item[i] = new Item(image,name,String.valueOf(date),menu,address,false);
+                    items.add(item[i]);
+                }
+
+                // recyclevuew 갱신
+                adapter.notifyDataSetChanged();
+
+//                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+////                    a = ds.getValue(String.class);
+//
+//                    if(ds.getKey()=="address"){
+//                        address = ds.getValue(String.class);
+//                    }
+////                    address = ds.child("address").getValue(String.class);
+////                    name = ds.child("name").getValue(String.class);
+////                    a = ds.child("0").getValue(String.class);
+//                    Log.d("TAG", address + " / " + name+ " / "+ a);
+//
+//                }
+                Log.d("TAG", address + " / " + name);
+                Toast.makeText(getApplicationContext(), address + " / " + name, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
 
     //검색어를 받아 음식점 정보를 카드뷰에 뿌려준다
     public void  onClickSearch(View v){
@@ -144,8 +211,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        adapter.items.clear();
+
         //위치정보 가져오기
         GPSConnetion();
+
+        //FireBase에서 데이터 가져오기
+        getDateToFirebaseDB();
     }
 
     void GPSConnetion(){
