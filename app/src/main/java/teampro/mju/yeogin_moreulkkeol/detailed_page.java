@@ -5,9 +5,6 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,6 +21,8 @@ public class detailed_page extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_page);
 
+       // String name = intent.getExtras().getString("title");
+
         mapButton = (Button)findViewById(R.id.map);
         btn_writeComment = findViewById(R.id.review_button);
 
@@ -31,7 +30,7 @@ public class detailed_page extends AppCompatActivity {
         btn_writeComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(detailed_page.this, review.class);
+                Intent intent = new Intent(detailed_page.this, writeReview.class);
                 startActivity(intent);
             }
         });
@@ -45,7 +44,7 @@ public class detailed_page extends AppCompatActivity {
             }
         });
 
-        String[] items = {"dnr2144\n 맛있다.", "Sasd2018\n음식이 너무 짜다.", "kkh88234\n음식을 먹을수록 고통스럽다.", "seong21\n서비스가 별로다.", "kasd21\n주인이 서비스 마인드가 없다.", "retw21\n먹자마자 욕밖에 안 나온다.", "cyj7723\n밑받찬 리필이 안 된다.", "cju721\n물을 사먹어야 해서 다시는 안 올 거 같다."};
+        String[] items = {"dnr2144\n 맛있다.", "Sasd2018\n음식이 너무 짜다.", "kkh88234\n음식을 먹을수록 고통스럽다.", "seong21\n서비스가 별로다.", "kasd21\n주인이 서비스 마인드가 없다.", "retw21\n먹자마자 욕밖에 안 나온다.", "cyj7723\n밑반찬 리필이 안 된다.", "cju721\n물을 사먹어야 해서 다시는 안 올 거 같다."};
         ListAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
         ListView listView = (ListView) findViewById(R.id.reviewList);
         listView.setAdapter(adapter);

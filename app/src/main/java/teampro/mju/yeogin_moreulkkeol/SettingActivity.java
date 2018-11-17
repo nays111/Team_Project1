@@ -26,7 +26,7 @@ public class SettingActivity extends AppCompatActivity {
         backToMainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SettingActivity.this,Main2Activity.class);
+                Intent intent = new Intent(SettingActivity.this,MainActivity.class);
                 SettingActivity.this.startActivity(intent);
             }
         });

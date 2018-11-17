@@ -29,9 +29,8 @@
         </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".SettingActivity" />
-        <activity android:name=".Main2Activity" />
         <activity android:name=".detailed_page" />
-        <activity android:name=".review" />
+        <activity android:name=".writeReview" />
         <activity android:name=".SearchActivity"></activity>
     </application>
 

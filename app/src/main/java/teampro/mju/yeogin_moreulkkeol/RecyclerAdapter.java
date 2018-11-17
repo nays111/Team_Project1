@@ -67,6 +67,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
                 Intent intent = new Intent(context, detailed_page.class);
+
                 context.startActivity(intent);
             }
         });
@@ -113,7 +114,6 @@ class Item {
     }
     void setbookmark(boolean bookmark){ this.bookmark = bookmark;}
 
-
     String getAddress() {
         return this.address;
     }
@@ -135,7 +135,6 @@ class Item {
     void setImageSrc(String imageSrc) {
          this.imageSrc = imageSrc;
     }
-
 
     String getTitle() {
         return this.title;

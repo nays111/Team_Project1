@@ -80,7 +80,10 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginBottom="8dp"
+                    android:background="#00ffffff"
+                    android:textColor="#0091ea"
                     android:text="리뷰 쓰기"
+                    android:textSize="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -93,6 +96,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="구글지도로 길찾기"
+                android:background="#00ffffff"
+                android:textColor="#009"
                 android:textStyle="bold"
                 tools:layout_editor_absoluteX="47dp"
                 tools:layout_editor_absoluteY="363dp" />
