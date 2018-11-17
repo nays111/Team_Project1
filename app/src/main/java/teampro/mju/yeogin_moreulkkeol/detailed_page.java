@@ -17,23 +17,27 @@ import android.widget.Toast;
 
 public class detailed_page extends AppCompatActivity {
 
-    Button btn_writeComment;
+    Button btn_writeComment, mapButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_page);
 
-        Button button = (Button)findViewById(R.id.map);
+        mapButton = (Button)findViewById(R.id.map);
         btn_writeComment = findViewById(R.id.review_button);
 
+        // "리뷰 쓰기" 버튼 눌렀을 때.
         btn_writeComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(detailed_page.this,review.class);
+                Intent intent = new Intent(detailed_page.this, review.class);
                 startActivity(intent);
             }
         });
-        button.setOnClickListener(new View.OnClickListener() {
+
+        // "구글지도로 길찾기" 버튼 눌렀을 때.
+        mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.co.kr/maps/place/%EA%B0%88%ED%92%8D%EC%A7%91/@37.2980556,127.0458433,15z/data=!4m2!3m1!1s0x0:0x882fc63fa4d35b41?ved=2ahUKEwiHgfzdlLjeAhXHerwKHWpSAxcQ_BIwCnoECAYQCA"));
@@ -41,11 +45,12 @@ public class detailed_page extends AppCompatActivity {
             }
         });
 
-        String[] items = {"dnr2144\n 맛있다", "Sasd2018\n 음식이 너무 짜다", "kkh88234\n 음식을 먹을수록 고통스럽다"};
+        String[] items = {"dnr2144\n 맛있다.", "Sasd2018\n음식이 너무 짜다.", "kkh88234\n음식을 먹을수록 고통스럽다.", "seong21\n서비스가 별로다.", "kasd21\n주인이 서비스 마인드가 없다.", "retw21\n먹자마자 욕밖에 안 나온다.", "cyj7723\n밑받찬 리필이 안 된다.", "cju721\n물을 사먹어야 해서 다시는 안 올 거 같다."};
         ListAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
         ListView listView = (ListView) findViewById(R.id.reviewList);
         listView.setAdapter(adapter);
 
+        // 리스트뷰 아이템 중 하나 클릭했을 때.
         listView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override

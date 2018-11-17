@@ -88,13 +88,6 @@
 
             </LinearLayout>
 
-
-            <ListView
-                android:id="@+id/reviewList"
-                android:layout_width="match_parent"
-                android:layout_height="146dp"
-                android:scrollbars="vertical" />
-
             <Button
                 android:id="@+id/map"
                 android:layout_width="wrap_content"
@@ -103,6 +96,12 @@
                 android:textStyle="bold"
                 tools:layout_editor_absoluteX="47dp"
                 tools:layout_editor_absoluteY="363dp" />
+
+            <ListView
+                android:id="@+id/reviewList"
+                android:layout_width="match_parent"
+                android:layout_height="146dp"
+                android:scrollbars="vertical" />
 
 
         </LinearLayout>

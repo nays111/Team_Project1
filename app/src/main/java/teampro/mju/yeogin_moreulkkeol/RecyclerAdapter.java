@@ -31,13 +31,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         this.item_layout = item_layout;
     }
 
-    @Override
+    @Override // XML 디자인 한 부분 적용.
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cardview, null);
         return new ViewHolder(v);
     }
 
-    @Override
+    @Override // XML 디자인한 부분의 안에 내용 변경
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Item item = items.get(position);
         // 카드뷰의 각 리스트의 값을 넣는다.
@@ -59,26 +59,27 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.address.setText(item.getAddress());
         //holder.bookmark.setImageDrawable(drawable);
 
+        // detailed_page로 이동.
         holder.cardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, item.getTitle(), Toast.LENGTH_SHORT).show();
 
 
-                Intent intent = new Intent(context,detailed_page.class);
+                Intent intent = new Intent(context, detailed_page.class);
                 context.startActivity(intent);
             }
         });
     }
 
-    @Override
+    @Override // 아이템을 측정하는 카운터.
     public int getItemCount() {
         return this.items.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
-        TextView title,category,date,address;
+        TextView title, category, date, address;
         ImageButton bookmark;
         CardView cardview;
 
@@ -126,7 +127,7 @@ class Item {
     String getCategory() {
         return this.category;
     }
-    void setCategory(String address){ this.category =category;}
+    void setCategory(String address){ this.category = category;}
 
     String getImageSrc() {
         return this.imageSrc;
@@ -148,6 +149,7 @@ class Item {
         this.title = title;
 
     }
+
     Item(String imageSrc,
          String title,
          String date,

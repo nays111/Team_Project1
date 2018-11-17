@@ -34,7 +34,9 @@
             android:isIndicator="false"
             android:max="5"
             android:numStars="5"
-            android:stepSize="0.5"></RatingBar>
+            android:stepSize="0.5">
+
+        </RatingBar>
 
 
 
