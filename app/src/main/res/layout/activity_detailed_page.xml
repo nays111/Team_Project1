@@ -56,7 +56,8 @@
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.363"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                android:background="@drawable/textview"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -133,11 +134,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="구글지도로 길찾기"
-                android:background="#00ffffff"
+
                 android:textColor="#009"
                 android:textStyle="bold"
                 tools:layout_editor_absoluteX="47dp"
-                tools:layout_editor_absoluteY="363dp" />
+                tools:layout_editor_absoluteY="363dp"
+                android:background="@drawable/button"/>
 
             <ListView
                 android:id="@+id/reviewList"

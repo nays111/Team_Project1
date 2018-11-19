@@ -16,7 +16,9 @@
         android:layout_marginTop="130dp"
         android:ems="10"
         android:hint="아이디"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:background="@drawable/edittext"
+        />
 
     <Button
         android:id="@+id/loginButton"
@@ -24,9 +26,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="240dp"
 
-        android:layout_marginTop="244dp"
-        android:hint="로그인" />
+
+        android:text="로그인"
+
+        android:background="@drawable/button"/>
 
     <EditText
         android:id="@+id/passwordText"
@@ -37,7 +42,8 @@
         android:layout_marginTop="187dp"
         android:ems="10"
         android:hint="비밀번호"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:background="@drawable/edittext"/>
 
     <TextView
         android:id="@+id/registerButton"
@@ -48,7 +54,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="243dp"
         android:text="회원가입"
-        android:textAppearance="@style/TextAppearance.AppCompat" />
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:background="@drawable/textview"/>
 
     <TextView
         android:id="@+id/forgetButton"
@@ -58,18 +65,22 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="212dp"
         android:text="비밀번호를 잊어버리셨나요?"
-        android:textAppearance="@style/TextAppearance.AppCompat" />
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:background="@drawable/textview"/>
 
     <TextView
         android:id="@+id/nameofproject"
-        android:layout_width="211dp"
-        android:layout_height="44dp"
+        android:layout_width="220dp"
+        android:layout_height="52dp"
         android:layout_alignParentTop="true"
 
         android:layout_centerHorizontal="true"
         android:layout_marginTop="59dp"
         android:text="여긴 모를껄?"
 
-        android:textColor="@android:color/holo_orange_dark" />
+        android:textColor="@android:color/holo_orange_dark"
+        android:textSize="36sp"
+        tools:fontFamily="casual"
+        />
 
 </RelativeLayout>
