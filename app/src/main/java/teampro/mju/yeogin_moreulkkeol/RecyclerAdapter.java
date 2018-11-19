@@ -48,7 +48,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             //holder.image.setBackground(drawable);
 
-            //Glide라이브러리로 이미지 로딩
+            //Glide 라이브러리로 이미지 로딩
             Glide.with(context)
                     .load(item.getImageSrc())
                     .into(holder.image);
@@ -57,6 +57,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.date.setText(item.getDate());
         holder.category.setText(item.getCategory());
         holder.address.setText(item.getAddress());
+
         //holder.bookmark.setImageDrawable(drawable);
 
         // detailed_page로 이동.
@@ -65,8 +66,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             public void onClick(View v) {
                 Toast.makeText(context, item.getTitle(), Toast.LENGTH_SHORT).show();
 
-
                 Intent intent = new Intent(context, detailed_page.class);
+                intent.putExtra("title", item.getTitle());
+                intent.putExtra("address", item.getAddress());
+                intent.putExtra("image", item.getImageSrc());
+                intent.putExtra("category", item.getCategory());
+                intent.putExtra("date", item.getDate());
 
                 context.startActivity(intent);
             }
@@ -109,10 +114,10 @@ class Item {
     String category;
     boolean bookmark;
 
-    boolean getbookmark() {
+    boolean getBookmark() {
         return this.bookmark;
     }
-    void setbookmark(boolean bookmark){ this.bookmark = bookmark;}
+    void setBookmark(boolean bookmark){ this.bookmark = bookmark;}
 
     String getAddress() {
         return this.address;
