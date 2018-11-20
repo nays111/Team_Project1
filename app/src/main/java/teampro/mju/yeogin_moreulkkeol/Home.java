@@ -146,9 +146,21 @@ public class Home extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
 
-
         //검색부분
         et_searchWord = rootView.findViewById(R.id.searchWord);
+        et_searchWord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //검색어를 받아 음식점 정보를 카드뷰에 뿌려준다
+
+                String query = et_searchWord.getText().toString();
+
+                Toast.makeText(context, query + "", Toast.LENGTH_LONG).show();
+                et_searchWord.setText(null);
+
+
+            }
+        });
 
         //음식점 리스트 부분
         RecyclerView recyclerView = rootView.findViewById(R.id.recycleview1);
@@ -160,7 +172,6 @@ public class Home extends Fragment {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         mRootRef = firebaseDatabase.getReference();
-
 
 
         restaurantItem = new Item[ITEM_SIZE];
@@ -180,19 +191,6 @@ public class Home extends Fragment {
         return rootView;
     }
 
-//    public class RecyclerViewDecoration extends RecyclerView.ItemDecoration {
-//        private final int divHeight;
-//
-//        public RecyclerViewDecoration(int divHeight) {
-//            this.divHeight = divHeight;
-//        }
-//
-//        @Override
-//        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-//            super.getItemOffsets(outRect, view, parent, state);
-//            outRect.top = divHeight;
-//        }
-//    }
     void getDateToFirebaseDB() {
 
         //        mRootRef.push().setValue("shopList");
@@ -205,7 +203,8 @@ public class Home extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String address = "", name = "", image = "", menu = "";
-                double date = 0, x = 0, y = 0;
+                double x = 0, y = 0;
+                int date=0;
 //                Map<String, Object> map = dataSnapshot.getValue();
 //                key = dataSnapshot.getKey();
 
@@ -219,19 +218,19 @@ public class Home extends Fragment {
                     image = ds.child("image").getValue(String.class);
                     menu = ds.child("menu").getValue(String.class);
                     name = ds.child("name").getValue(String.class);
-                    date = ds.child("open_date").getValue(Double.class);
+                    date = ds.child("open_date").getValue(Integer.class);
                     x = ds.child("x").getValue(Double.class);
                     y = ds.child("y").getValue(Double.class);
 
 
 //                    item[i] = new Item("https://www.google.co.kr/maps/uv?hl=ko&pb=!1s0x357b4935cb351885:0x5793b3bf178f8603!2m22!2m2!1i80!2i80!3m1!2i20!16m16!1b1!2m2!1m1!1e1!2m2!1m1!1e3!2m2!1m1!1e5!2m2!1m1!1e4!2m2!1m1!1e6!3m1!7e115!4shttps://lh5.googleusercontent.com/p/AF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v%3Dw325-h218-n-k-no!5z66eb7KeRIC0gR29vZ2xlIOqygOyDiQ&imagekey=!1e10!2sAF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v",
 //                            "안골식당","2018-11-03","한식","경기도 용인시 기흥구 고매동 227-1번지 ",true);
-                    restaurantItem[i] = new Item(image, name, String.valueOf(date), menu, address, false);
+                    restaurantItem[i] = new Item(image, name, date, menu, address, false);
                     restaurantItem[i].setLat(x);
                     restaurantItem[i].setLon(y);
                     items.add(restaurantItem[i]);
 
-                    Log.d("DB-data", name + " / " );
+                    Log.d("DB-data", name + " / ");
                 }
 
                 // recyclevuew 갱신
@@ -249,8 +248,6 @@ public class Home extends Fragment {
 //                    Log.d("TAG", address + " / " + name+ " / "+ a);
 //
 //                }
-
-//                Toast.makeText(getApplicationContext(), address + " / " + name, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -260,17 +257,6 @@ public class Home extends Fragment {
         });
     }
 
-
-    //검색어를 받아 음식점 정보를 카드뷰에 뿌려준다
-    public void onClickSearch(View v) {
-
-        String query = et_searchWord.getText().toString();
-
-        Toast.makeText(context, query + "", Toast.LENGTH_LONG).show();
-        et_searchWord.setText(null);
-
-
-    }
 
     @Override
     public void onResume() {
@@ -311,10 +297,10 @@ public class Home extends Fragment {
 //                    Toast.LENGTH_LONG).show();
 //
 
-            Toast.makeText(
-                    context,
-                    address,
-                    Toast.LENGTH_LONG).show();
+//            Toast.makeText(
+//                    context,
+//                    address,
+//                    Toast.LENGTH_LONG).show();
 
 
         } else {

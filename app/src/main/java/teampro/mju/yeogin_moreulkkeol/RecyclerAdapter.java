@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
@@ -40,18 +41,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         // 카드뷰의 각 리스트의 값을 넣는다.
         // 사진, 음식점이름, 카테고리, 등록일, 즐겨찾기, 주소
 
-        //Drawable drawable = ContextCompat.getDrawable(context, R.drawable.ic_action_name);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            //holder.image.setBackground(drawable);
 
+            RequestOptions requestOptions = new RequestOptions();
+            requestOptions.fitCenter();
             //Glide라이브러리로 이미지 로딩
             Glide.with(context)
                     .load(item.getImageSrc())
+//                    .thumbnail(1f)
+                    .apply(requestOptions)
+//                    .apply(new RequestOptions().override(600, 200))
                     .into(holder.image);
         }
         holder.title.setText(item.getTitle());
-        holder.date.setText(item.getDate());
+        holder.date.setText(Integer.toString(item.getDate()));
         holder.category.setText(item.getCategory());
         holder.address.setText(item.getAddress());
         //holder.bookmark.setImageDrawable(drawable);
@@ -102,7 +105,7 @@ class Item {
     String imageSrc;
     String title;
     String address;
-    String date;
+    int date;
     String category;
     double lat=0,lon=0;
     boolean bookmark;
@@ -132,10 +135,10 @@ class Item {
     }
     void setAddress(String address){ this.address =address;}
 
-    String getDate() {
+    int getDate() {
         return this.date;
     }
-    void setDate(String date){ this.date =date;}
+    void setDate(int date){ this.date =date;}
 
     String getCategory() {
         return this.category;
@@ -164,7 +167,7 @@ class Item {
     }
     Item(String imageSrc,
          String title,
-         String date,
+         int date,
          String category,
          String address,
          boolean bookmark) {
