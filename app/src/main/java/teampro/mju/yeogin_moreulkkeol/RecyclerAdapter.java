@@ -2,10 +2,7 @@ package teampro.mju.yeogin_moreulkkeol;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,7 +30,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cardview, null);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cardview,parent,false);
         return new ViewHolder(v);
     }
 
@@ -66,6 +63,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
                 Intent intent = new Intent(context,detailed_page.class);
+
+                intent.putExtra("name",item.getTitle());
                 context.startActivity(intent);
             }
         });
@@ -105,7 +104,22 @@ class Item {
     String address;
     String date;
     String category;
+    double lat=0,lon=0;
     boolean bookmark;
+
+
+    double getLat(){
+        return this.lat;
+    }
+    void setLat(double lat){
+        this.lat = lat;
+    }
+    double getLon(){
+        return this.lon;
+    }
+    void setLon(double lon){
+        this.lon = lon;
+    }
 
     boolean getbookmark() {
         return this.bookmark;
