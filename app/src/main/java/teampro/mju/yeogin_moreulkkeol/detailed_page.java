@@ -15,6 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.io.File;
 import java.net.URL;
 
@@ -51,6 +53,10 @@ public class detailed_page extends AppCompatActivity {
         Categoty.setText(category);
         Address.setText(address);
         Date.setText(date);
+
+        Glide.with(getApplicationContext())
+                .load(imageSrc)
+                .into(ImageSrc);
 
 
         mapButton = (Button)findViewById(R.id.map);
