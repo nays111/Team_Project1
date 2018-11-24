@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".detailed_page">
 
+
+
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
@@ -49,7 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:background="#00ffffff"
-                android:text="갈풍집"
+                android:text="가게 이름"
                 android:textStyle="bold"
                 android:textAlignment="center"
                 android:textSize="20sp"
@@ -90,7 +92,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
                 android:background="#00ffffff"
-                android:text="경기도 용인시 기흥구 보정동 1181-2번지 1층"
+                android:text="주소"
                 android:textAlignment="center"
                 android:textSize="17sp" />
 
@@ -128,17 +130,11 @@
 
             </LinearLayout>
 
-            <Button
+            <fragment
                 android:id="@+id/map"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="구글지도로 길찾기"
-
-                android:textColor="#009"
-                android:textStyle="bold"
-                tools:layout_editor_absoluteX="47dp"
-                tools:layout_editor_absoluteY="363dp"
-                android:background="@drawable/button"/>
+                class="com.google.android.gms.maps.MapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="252dp" />
 
             <ListView
                 android:id="@+id/reviewList"

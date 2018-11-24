@@ -15,6 +15,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- 구글 맵 API 키 등록 -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBgtsV565mCjC37RBmttbwdNOzlD7uUXPc" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

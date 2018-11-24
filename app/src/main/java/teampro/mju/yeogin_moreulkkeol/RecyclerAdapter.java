@@ -72,7 +72,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 intent.putExtra("image", item.getImageSrc());
                 intent.putExtra("category", item.getCategory());
                 intent.putExtra("date", item.getDate());
-
+                intent.putExtra("X", item.getX());
+                intent.putExtra("Y", item.getY());
                 context.startActivity(intent);
             }
         });
@@ -112,41 +113,33 @@ class Item {
     String address;
     String date;
     String category;
+    double x;
+    double y;
     boolean bookmark;
 
-    boolean getBookmark() {
-        return this.bookmark;
-    }
+    double getX() {return this.x;}
+    void setX(double x) { this.x = x;}
+
+    double getY() { return this.y; }
+    void setY(double y) {this.y = y;}
+
+    boolean getBookmark() { return this.bookmark; }
     void setBookmark(boolean bookmark){ this.bookmark = bookmark;}
 
-    String getAddress() {
-        return this.address;
-    }
+    String getAddress() { return this.address; }
     void setAddress(String address){ this.address =address;}
 
-    String getDate() {
-        return this.date;
-    }
+    String getDate() { return this.date; }
     void setDate(String date){ this.date =date;}
 
-    String getCategory() {
-        return this.category;
-    }
+    String getCategory() { return this.category; }
     void setCategory(String address){ this.category = category;}
 
-    String getImageSrc() {
-        return this.imageSrc;
-    }
-    void setImageSrc(String imageSrc) {
-         this.imageSrc = imageSrc;
-    }
+    String getImageSrc() { return this.imageSrc; }
+    void setImageSrc(String imageSrc) { this.imageSrc = imageSrc; }
 
-    String getTitle() {
-        return this.title;
-    }
-    void setTitle(String title) {
-        this.title = title;
-    }
+    String getTitle() { return this.title; }
+    void setTitle(String title) { this.title = title; }
 
     Item(String imageSrc, String title) {
         this.imageSrc = imageSrc;
@@ -154,18 +147,16 @@ class Item {
 
     }
 
-    Item(String imageSrc,
-         String title,
-         String date,
-         String category,
-         String address,
-         boolean bookmark) {
+    Item(String imageSrc, String title, String date, String category, String address, boolean bookmark, double x, double y)
+    {
         this.imageSrc = imageSrc;
         this.title = title;
         this.address = address;
         this.category = category;
         this.date = date;
         this.bookmark = bookmark;
-
+        this.x = x;
+        this.y = y;
     }
+
 }
