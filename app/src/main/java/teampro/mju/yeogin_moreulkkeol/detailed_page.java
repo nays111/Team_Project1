@@ -33,15 +33,18 @@ import java.net.URL;
 public class detailed_page extends AppCompatActivity implements OnMapReadyCallback {
 
     Button btn_writeComment;
-    //Button mapButton;
-    TextView Title, Categoty, Date, Address;
+    TextView Title;
+    TextView Categoty;
+    TextView Date, Address;
     ImageView ImageSrc;
     Intent intent;
-
-    String title = "", category = "", address = "", imageSrc = "", date = "";
+    String title = "";
+    String category = "";
+    String address = "";
+    String imageSrc = "";
+    String date = "";
     double x;
     double y;
-
     FragmentManager fragmentManager;
 
     @Override
@@ -49,11 +52,6 @@ public class detailed_page extends AppCompatActivity implements OnMapReadyCallba
 
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_detailed_page);
-
-            fragmentManager = getFragmentManager();
-            MapFragment mapFragment = (MapFragment) fragmentManager.findFragmentById(R.id.map);
-            mapFragment.getMapAsync((OnMapReadyCallback) this);
-
 
             Title = (TextView) findViewById(R.id.Title);
             Categoty = (TextView) findViewById(R.id.Category);
@@ -70,6 +68,10 @@ public class detailed_page extends AppCompatActivity implements OnMapReadyCallba
             x = intent.getDoubleExtra("X", 0.0D);
             y = intent.getDoubleExtra("Y", 0.0D);
 
+            fragmentManager = getFragmentManager();
+            MapFragment mapFragment = (MapFragment) fragmentManager.findFragmentById(R.id.map);
+            mapFragment.getMapAsync((OnMapReadyCallback) this);
+
             Title.setText(title);
             Categoty.setText(category);
             Address.setText(address);
@@ -79,8 +81,6 @@ public class detailed_page extends AppCompatActivity implements OnMapReadyCallba
 //                .load(imageSrc)
 //                .into(ImageSrc);
 
-
-            //mapButton = (Button)findViewById(R.id.map);
             btn_writeComment = findViewById(R.id.review_button);
 
             // "리뷰 쓰기" 버튼 눌렀을 때.
@@ -117,7 +117,7 @@ public class detailed_page extends AppCompatActivity implements OnMapReadyCallba
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(RESTRAUNT);
         markerOptions.title(title);
-        markerOptions.snippet("< 여기 모를껄? > ");
+        markerOptions.snippet("< 여긴 모를껄? > ");
         map.addMarker(markerOptions);
 
         map.moveCamera(CameraUpdateFactory.newLatLng(RESTRAUNT));

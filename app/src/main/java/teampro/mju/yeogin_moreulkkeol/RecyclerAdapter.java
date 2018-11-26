@@ -105,7 +105,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 }
 
 
-
 // 음식점 아이템 클래스
 class Item {
     String imageSrc;
@@ -130,7 +129,7 @@ class Item {
     void setAddress(String address){ this.address =address;}
 
     String getDate() { return this.date; }
-    void setDate(String date){ this.date =date;}
+    void setDate(String date){ this.date = date;}
 
     String getCategory() { return this.category; }
     void setCategory(String address){ this.category = category;}

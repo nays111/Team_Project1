@@ -96,7 +96,11 @@
                 android:textAlignment="center"
                 android:textSize="17sp" />
 
-
+            <fragment
+                android:id="@+id/map"
+                class="com.google.android.gms.maps.MapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="252dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -127,21 +131,14 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
-
             </LinearLayout>
 
-            <fragment
-                android:id="@+id/map"
-                class="com.google.android.gms.maps.MapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="252dp" />
 
             <ListView
                 android:id="@+id/reviewList"
                 android:layout_width="match_parent"
-                android:layout_height="146dp"
+                android:layout_height="520dp"
                 android:scrollbars="vertical" />
-
 
         </LinearLayout>
 

@@ -44,10 +44,6 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference mRootRef;
-    DatabaseReference ChildRef;
-
     // 현재 GPS 사용유무
     boolean isGPSEnabled = false;
 
@@ -89,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerAdapter adapter;
 
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference mRootRef;
+    DatabaseReference ChildRef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,11 +98,8 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
         //검색부분
         et_searchWord = findViewById(R.id.searchWord) ;
-
 
         //음식점 리스트 부분
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
@@ -114,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         mRootRef = firebaseDatabase.getReference();
-
 
         items = new ArrayList<>();
         item = new Item[ITEM_SIZE];
@@ -137,14 +133,12 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         //위치정보 가져오기
         GPSConnetion();
-
-
     }
 
     void getDateToFirebaseDB(){
 
-        //        mRootRef.push().setValue("shopList");
-        //mRootRef.child("users").child("1").child("2").setValue("v");
+        // mRootRef.push().setValue("shopList");
+        // mRootRef.child("users").child("1").child("2").setValue("v");
 
 
         //FirebaseDB에서 데이터 가져오기
@@ -153,10 +147,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String address="" ,name="" ,image="", menu="";
-                double date = 0, x = 0, y = 0;
+                int date = 0;
+                double x = 0, y = 0;
 //                Map<String, Object> map = dataSnapshot.getValue();
 //                key = dataSnapshot.getKey();
-
 
                 adapter.items.clear();
 
@@ -167,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                     image = ds.child("image").getValue(String.class);
                     menu = ds.child("menu").getValue(String.class);
                     name = ds.child("name").getValue(String.class);
-                    date = ds.child("open_date").getValue(Double.class);
+                    date = ds.child("open_date").getValue(Integer.class);
                     x = ds.child("x").getValue(Double.class);
                     y = ds.child("y").getValue(Double.class);
 
@@ -212,8 +206,6 @@ public class MainActivity extends AppCompatActivity {
 
         Toast.makeText(this,query+"",Toast.LENGTH_LONG).show();
         et_searchWord.setText(null);
-
-
     }
 
 
