@@ -3,11 +3,13 @@ package teampro.mju.yeogin_moreulkkeol;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class ReviewActivity extends AppCompatActivity {
+public class writeReview extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_review);
+
+
     }
 }

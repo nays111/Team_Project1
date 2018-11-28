@@ -65,9 +65,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 //                Toast.makeText(context, item.getTitle(), Toast.LENGTH_SHORT).show();
 
 
-                Intent intent = new Intent(context,detailed_page.class);
-
-                intent.putExtra("name",item.getTitle());
+                Intent intent = new Intent(context, detailed_page.class);
+                intent.putExtra("title", item.getTitle());
+                intent.putExtra("address", item.getAddress());
+                intent.putExtra("Image", item.getImageSrc());
+                intent.putExtra("category", item.getCategory());
+                intent.putExtra("date", item.getDate());
+                intent.putExtra("X", item.getX());
+                intent.putExtra("Y", item.getY());
                 context.startActivity(intent);
             }
         });
@@ -108,9 +113,16 @@ class Item {
     int date;
     String category;
     double lat=0,lon=0;
+    double x;
+    double y;
     boolean bookmark;
 
 
+    double getX() {return this.x;}
+    void setX(double x) { this.x = x;}
+
+    double getY() { return this.y; }
+    void setY(double y) {this.y = y;}
     double getLat(){
         return this.lat;
     }
@@ -165,18 +177,15 @@ class Item {
         this.title = title;
 
     }
-    Item(String imageSrc,
-         String title,
-         int date,
-         String category,
-         String address,
-         boolean bookmark) {
+    Item(String imageSrc, String title, int date, String category, String address, boolean bookmark, double x, double y)
+    {
         this.imageSrc = imageSrc;
         this.title = title;
         this.address = address;
         this.category = category;
         this.date = date;
         this.bookmark = bookmark;
-
+        this.x = x;
+        this.y = y;
     }
 }
