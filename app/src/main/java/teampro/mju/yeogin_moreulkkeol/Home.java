@@ -222,7 +222,7 @@ public class Home extends Fragment {
                     x = ds.child("x").getValue(Double.class);
                     y = ds.child("y").getValue(Double.class);
 
-
+                    String re = ds.child("review1").child("comment").getValue(String.class);
 //                    item[i] = new Item("https://www.google.co.kr/maps/uv?hl=ko&pb=!1s0x357b4935cb351885:0x5793b3bf178f8603!2m22!2m2!1i80!2i80!3m1!2i20!16m16!1b1!2m2!1m1!1e1!2m2!1m1!1e3!2m2!1m1!1e5!2m2!1m1!1e4!2m2!1m1!1e6!3m1!7e115!4shttps://lh5.googleusercontent.com/p/AF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v%3Dw325-h218-n-k-no!5z66eb7KeRIC0gR29vZ2xlIOqygOyDiQ&imagekey=!1e10!2sAF1QipMrAAWz2YV4zEWe1ckrrkQEKQy59GK2N2dKx8_v",
 //                            "안골식당","2018-11-03","한식","경기도 용인시 기흥구 고매동 227-1번지 ",true);
                     restaurantItem[i] = new Item(image, name, date, menu, address, false);
@@ -230,7 +230,7 @@ public class Home extends Fragment {
                     restaurantItem[i].setLon(y);
                     items.add(restaurantItem[i]);
 
-                    Log.d("DB-data", name + " / ");
+                    Log.d("DB-data", name + " / " + re);
                 }
 
                 // recyclevuew 갱신
