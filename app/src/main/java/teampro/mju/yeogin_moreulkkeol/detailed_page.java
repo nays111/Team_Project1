@@ -31,9 +31,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class detailed_page extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -53,6 +60,11 @@ public class detailed_page extends AppCompatActivity implements OnMapReadyCallba
     FragmentManager fragmentManager;
     ScrollView sc ;
     ListView reviewList;
+    FirebaseDatabase fDB;
+    DatabaseReference DBrf;
+    ArrayAdapter adapter;
+    ArrayList<String> list;
+    int position;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -74,7 +86,7 @@ public class detailed_page extends AppCompatActivity implements OnMapReadyCallba
         date = intent.getIntExtra("date", 0) + " 개업";
         x = intent.getDoubleExtra("X", 0.0D);
         y = intent.getDoubleExtra("Y", 0.0D);
-
+        position= intent.getIntExtra("position",0)+1;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             RequestOptions requestOptions = new RequestOptions();
@@ -85,6 +97,7 @@ public class detailed_page extends AppCompatActivity implements OnMapReadyCallba
                     .apply(requestOptions)
                     .into(IV_title);
         }
+
 
 
 
@@ -107,16 +120,54 @@ public class detailed_page extends AppCompatActivity implements OnMapReadyCallba
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(detailed_page.this, writeReview.class);
+                intent.putExtra("positin",position);
                 startActivity(intent);
             }
         });
 
-        String[] review = {"dnr2144\n 맛있다.", "Sasd2018\n음식이 너무 짜다.", "kkh88234\n음식을 먹을수록 고통스럽다.", "seong21\n서비스가 별로다.", "kasd21\n주인이 서비스 마인드가 없다.", "retw21\n먹자마자 욕밖에 안 나온다.", "cyj7723\n밑반찬 리필이 안 된다.", "cju721\n물을 사먹어야 해서 다시는 안 올 거 같다."};
+        list = new ArrayList<>();
 
-        ListAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, review);
-        ListView listView = (ListView) findViewById(R.id.reviewList);
+
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
+        ListView listView = findViewById(R.id.reviewList);
         listView.setAdapter(adapter);
 
+        fDB = FirebaseDatabase.getInstance();
+        DBrf = fDB.getReference();
+        DBrf.child(position + "").child("review").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                adapter.clear();
+
+                // 리뷰 데이터
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    reviewDTO reviewObj = snapshot.getValue(reviewDTO.class);
+                    String coment = reviewObj.getComment();
+                    String id = reviewObj.getId();
+                    list.add(id + " \n "+ coment);
+                    Log.d("detailPage ", "id "+id + " / coment " + coment);
+                }
+//                    DataSnapshot ds = dataSnapshot.child(position + "");
+//                        for(DataSnapshot ds2 : ds.child("review").getChildren()){
+//                            String coment = ds2.child("comment").getValue(String.class);
+//                            String id = ds2.child("id").getValue(String.class);
+//
+//                            if(coment!=null&&id!=null&&coment!=""&&id!="")
+//                                list.add(id + " \n "+ coment);
+//
+//                            Log.d("detailPage ", "id "+id + " / coment " + coment);
+//                        }
+
+                // recyclevuew 갱신
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         // 리스트뷰 아이템 중 하나 클릭했을 때.
         listView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {

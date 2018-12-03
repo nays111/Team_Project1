@@ -11,24 +11,31 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
@@ -60,46 +67,19 @@ public class Home extends Fragment {
     Context context;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference mRootRef;
-    DatabaseReference ChildRef;
-    // 현재 GPS 사용유무
-    boolean isGPSEnabled = false;
-
-    // 네트워크 사용유무
-    boolean isNetworkEnabled = false;
-
-    // GPS 상태값
-    boolean isGetLocation = false;
-
-    Location location;
-    double lat; // 위도
-    double lon; // 경도
-
-    // 최소 GPS 정보 업데이트 거리 10미터
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
-
-    // 최소 GPS 정보 업데이트 시간 밀리세컨이므로 1분
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
 
     protected LocationManager locationManager;
-
-    private Button btnShowLocation;
-    private TextView txtLat;
-    private TextView txtLon;
     private final int PERMISSIONS_ACCESS_FINE_LOCATION = 1000;
     private final int PERMISSIONS_ACCESS_COARSE_LOCATION = 1001;
-    private boolean isAccessFineLocation = false;
-    private boolean isAccessCoarseLocation = false;
     private boolean isPermission = false;
 
-    // GPSTracker class
-    private GpsInfo gps;
     EditText et_searchWord;
     Toolbar toolbar;
 
-    List<Item> items;
+    ArrayList<Item> items;
     Item[] restaurantItem;
     final int ITEM_SIZE = 20;
-
+    ImageButton btn_search;
     RecyclerAdapter adapter;
 
     public Home() {
@@ -147,16 +127,23 @@ public class Home extends Fragment {
 
 
         //검색부분
+        btn_search = rootView.findViewById(R.id.btn_search);
+
         et_searchWord = rootView.findViewById(R.id.searchWord);
-        et_searchWord.setOnClickListener(new View.OnClickListener() {
+        btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //검색어를 받아 음식점 정보를 카드뷰에 뿌려준다
-
-                String query = et_searchWord.getText().toString();
-
-                Toast.makeText(context, query + "", Toast.LENGTH_LONG).show();
-                et_searchWord.setText(null);
+                String text = et_searchWord.getText().toString()
+                        .toLowerCase(Locale.getDefault());
+//                adapter.filter(text);
+                searchAddressDB(text);
+//                onSrarchDateToFirebaseDB();
+//                String query = et_searchWord.getText().toString();
+//
+//                Toast.makeText(context, query + "", Toast.LENGTH_LONG).show();
+//                et_searchWord.setText(null);
 
 
             }
@@ -182,14 +169,97 @@ public class Home extends Fragment {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         //        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,this);
 
-
         //FireBase에서 데이터 가져오기
         getDateToFirebaseDB();
-        //위치정보 가져오기
-        GPSConnetion();
 
         return rootView;
     }
+    void searchAddressDB(String str ){
+        final String name = str;
+        mRootRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String address = "", n ="",image = "", menu = "";
+                double x = 0, y = 0;
+                int date=0;
+//                Map<String, Object> map = dataSnapshot.getValue();
+//                key = dataSnapshot.getKey();
+
+
+                adapter.items.clear();
+
+                // 가져온 데이터를 리스트에 음식점리스트에 추가한다.
+                for (int i = 1; i < ITEM_SIZE; i++) {
+                    DataSnapshot ds = dataSnapshot.child(i + "");
+                    if(ds.child("name").getValue(String.class).contains(name)){
+                        address = ds.child("address").getValue(String.class);
+                        image = ds.child("image").getValue(String.class);
+                        menu = ds.child("menu").getValue(String.class);
+                        n = ds.child("name").getValue(String.class);
+                        date = ds.child("open_date").getValue(Integer.class);
+                        x = ds.child("x").getValue(Double.class);
+                        y = ds.child("y").getValue(Double.class);
+                        restaurantItem[i] = new Item(image, n, date, menu, address, false, x, y);
+                        restaurantItem[i].setLat(x);
+                        restaurantItem[i].setLon(y);
+                        items.add(restaurantItem[i]);
+
+                        Log.d("DB-data", n + " / " );
+                    }else if(ds.child("address").getValue(String.class).contains(name)){
+                        address = ds.child("address").getValue(String.class);
+                        image = ds.child("image").getValue(String.class);
+                        menu = ds.child("menu").getValue(String.class);
+                        n = ds.child("name").getValue(String.class);
+                        date = ds.child("open_date").getValue(Integer.class);
+                        x = ds.child("x").getValue(Double.class);
+                        y = ds.child("y").getValue(Double.class);
+                        restaurantItem[i] = new Item(image, n, date, menu, address, false, x, y);
+                        restaurantItem[i].setLat(x);
+                        restaurantItem[i].setLon(y);
+                        items.add(restaurantItem[i]);
+
+                        Log.d("DB-data", n + " / " );
+                    }else if(ds.child("menu").getValue(String.class).contains(name)){
+                        address = ds.child("address").getValue(String.class);
+                        image = ds.child("image").getValue(String.class);
+                        menu = ds.child("menu").getValue(String.class);
+                        n = ds.child("name").getValue(String.class);
+                        date = ds.child("open_date").getValue(Integer.class);
+                        x = ds.child("x").getValue(Double.class);
+                        y = ds.child("y").getValue(Double.class);
+                        restaurantItem[i] = new Item(image, n, date, menu, address, false, x, y);
+                        restaurantItem[i].setLat(x);
+                        restaurantItem[i].setLon(y);
+                        items.add(restaurantItem[i]);
+
+                        Log.d("DB-data", n + " / " );
+                    }else if(String.valueOf(ds.child("open_date").getValue(Integer.class)).contains(name)){
+                        address = ds.child("address").getValue(String.class);
+                        image = ds.child("image").getValue(String.class);
+                        menu = ds.child("menu").getValue(String.class);
+                        n = ds.child("name").getValue(String.class);
+                        date = ds.child("open_date").getValue(Integer.class);
+                        x = ds.child("x").getValue(Double.class);
+                        y = ds.child("y").getValue(Double.class);
+                        restaurantItem[i] = new Item(image, n, date, menu, address, false, x, y);
+                        restaurantItem[i].setLat(x);
+                        restaurantItem[i].setLon(y);
+                        items.add(restaurantItem[i]);
+
+                        Log.d("DB-data", n + " / " );
+                    }
+                }
+                // recyclevuew 갱신
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     void getDateToFirebaseDB() {
 
@@ -233,6 +303,18 @@ public class Home extends Fragment {
                     Log.d("DB-data", name + " / " + re);
                 }
 
+                // 리뷰 데이터
+                for (int i = 1; i < ITEM_SIZE; i++) {
+                    DataSnapshot ds = dataSnapshot.child(i + "");
+                    if(address == ds.child("address").getValue(String.class)){
+                        String coment = ds.child("review1").child("comment").getValue(String.class);
+
+                    }
+
+
+                }
+
+
                 // recyclevuew 갱신
                 adapter.notifyDataSetChanged();
 
@@ -262,128 +344,19 @@ public class Home extends Fragment {
     public void onResume() {
         super.onResume();
 
-        //위치정보 가져오기
-        GPSConnetion();
 
         //FireBase에서 데이터 가져오기
         getDateToFirebaseDB();
 
     }
 
-    void GPSConnetion() {
-
-        // 권한 요청을 해야 함
-        if (!isPermission) {
-            callPermission();
-            return;
-        }
-        Log.d("home GPSConnetion", "isPermission : " + isPermission);
 
 
-        gps = new GpsInfo(context);
-        Log.d("home GPSConnetion", "location" + location);
-
-        // GPS 사용유무 가져오기
-        if (gps.isGetLocation()) {
 
 
-            //gps정보를 주소로 변환
-            String address = getAddress(context, gps.getLatitude(), gps.getLongitude());
-            et_searchWord.setText(address);
-
-//            Toast.makeText(
-//                    getApplicationContext(),
-//                    gps.getLatitude()+" / "+gps.getLongitude(),
-//                    Toast.LENGTH_LONG).show();
-//
-
-//            Toast.makeText(
-//                    context,
-//                    address,
-//                    Toast.LENGTH_LONG).show();
 
 
-        } else {
-            // GPS 를 사용할수 없으므로
-            gps.showSettingsAlert();
-        }
 
-    }
-
-    //gps정보를 주소로 변환
-    public static String getAddress(Context mContext, double lat, double lng) {
-        String nowAddress = "현재 위치를 확인 할 수 없습니다.";
-        Geocoder geocoder = new Geocoder(mContext, Locale.KOREA);
-
-        List<Address> address;
-        try {
-            if (geocoder != null) {
-
-                //세번째 파라미터는 좌표에 대해 주소를 리턴 받는 갯수로
-                //한좌표에 대해 두개이상의 이름이 존재할수있기에 주소배열을 리턴받기 위해 최대갯수 설정
-                address = geocoder.getFromLocation(lat, lng, 1);
-                Log.d("geocoder", "getFromLocation");
-                if (address != null && address.size() > 0) {
-                    // 주소 받아오기
-                    String currentLocationAddress = address.get(0).getAddressLine(0);
-                    nowAddress = currentLocationAddress;
-                    Log.d("geocoder", nowAddress);
-                }
-            } else {
-                Log.e("geocoder", null);
-            }
-
-
-        } catch (IOException e) {
-            Log.e("getAddress()", "주소를 가져 올 수 없습니다.");
-            nowAddress = "주소를 가져 올 수 없습니다.";
-            e.printStackTrace();
-        }
-        return nowAddress;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
-        if (requestCode == PERMISSIONS_ACCESS_FINE_LOCATION
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-            isAccessFineLocation = true;
-
-        } else if (requestCode == PERMISSIONS_ACCESS_COARSE_LOCATION
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-            isAccessCoarseLocation = true;
-        }
-
-        if (isAccessFineLocation && isAccessCoarseLocation) {
-            isPermission = true;
-        }
-    }
-
-    // 전화번호 권한 요청
-    private void callPermission() {
-        // Check the SDK version and whether the permission is already granted or not.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && context.checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            requestPermissions(
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_ACCESS_FINE_LOCATION);
-
-
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && context.checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            requestPermissions(
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    PERMISSIONS_ACCESS_COARSE_LOCATION);
-        } else {
-            isPermission = true;
-        }
-    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
