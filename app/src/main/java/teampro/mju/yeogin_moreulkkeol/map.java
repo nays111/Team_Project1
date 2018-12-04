@@ -3,6 +3,7 @@ package teampro.mju.yeogin_moreulkkeol;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -32,8 +33,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,7 +49,7 @@ import java.util.Locale;
  * Use the {@link map#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class map extends Fragment implements OnMapReadyCallback {
+public class map extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -88,6 +91,8 @@ public class map extends Fragment implements OnMapReadyCallback {
     // GPSTracker class
     private GoogleMap googleMap;
     private GpsInfo gps;
+//    ArrayList<TMapPoint> arrayPoint;
+
     public map() {
         // Required empty public constructor
     }
@@ -101,12 +106,18 @@ public class map extends Fragment implements OnMapReadyCallback {
      * @return A new instance of fragment map.
      */
     // TODO: Rename and change types and number of parameters
-    public static map newInstance(String param1, String param2) {
-        map fragment = new map();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+    static ArrayList<Item> items;
+    static map fragment;
+    public static map newInstance(ArrayList<Item> mitems) {
+
+            fragment = new map();
+
+
+//        Bundle args = new Bundle();
+//        args.put(ARG_PARAM1, param1);
+//        args.putString(ARG_PARAM2, param2);
+//        fragment.setArguments(args);
+        items = mitems;
         return fragment;
     }
 
@@ -160,6 +171,28 @@ public class map extends Fragment implements OnMapReadyCallback {
 
         return v;
     }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+
+        //add marker
+//        MarkerOptions marker=new MarkerOptions();
+//        marker.position(latLng);
+//        mGoogleMap.addMarker(marker);
+
+        // 맵셋팅
+//        PolylineOptions polylineOptions = new PolylineOptions();
+//        polylineOptions.color(Color.RED);
+//        polylineOptions.width(5);
+//        arrayPoints.add(latLng);
+//        polylineOptions.addAll(arrayPoints);
+//        mGoogleMap.addPolyline(polylineOptions);
+    }
+
+
+
+
+
     public void onDestroyView() {
         super.onDestroyView();
         if( v != null ) {
@@ -168,6 +201,10 @@ public class map extends Fragment implements OnMapReadyCallback {
                 parent.removeView(v);
             }
         }
+        if(fragment!= null){
+            fragment = null;
+        }
+
     }
     private void replaceFragment(Fragment newFragment) {
 
@@ -325,12 +362,12 @@ public class map extends Fragment implements OnMapReadyCallback {
             isPermission = true;
         }
     }
-    void GPSConnetion() {
-
+    String address="";
+    String GPSConnetion() {
         // 권한 요청을 해야 함
         if (!isPermission) {
             callPermission();
-            return;
+            return "";
         }
         Log.d("home GPSConnetion", "isPermission : " + isPermission);
 
@@ -343,7 +380,7 @@ public class map extends Fragment implements OnMapReadyCallback {
 
 
             //gps정보를 주소로 변환
-            String address = getAddress(context, gps.getLatitude(), gps.getLongitude());
+            address = getAddress(context, gps.getLatitude(), gps.getLongitude());
 //            et_searchWord.setText(address);
 
 //            Toast.makeText(
@@ -358,10 +395,11 @@ public class map extends Fragment implements OnMapReadyCallback {
 //                    Toast.LENGTH_LONG).show();
 
 
-        } else {
-            // GPS 를 사용할수 없으므로
-            gps.showSettingsAlert();
-        }
+    } else {
+        // GPS 를 사용할수 없으므로
+        gps.showSettingsAlert();
+    }
+        return address;
 
     }
 
@@ -421,6 +459,9 @@ public class map extends Fragment implements OnMapReadyCallback {
     public void onStop() {
         super.onStop();
 //        mapView.onStop();
+        if(fragment!= null){
+            fragment = null;
+        }
     }
     @Override
 
@@ -488,10 +529,15 @@ public class map extends Fragment implements OnMapReadyCallback {
 //
 //
 //        map.animateCamera(CameraUpdateFactory.zoomTo(15));
+        for(Item item : items){
+            map.addMarker(new MarkerOptions()
+                    .position(new LatLng(item.getLat(), item.getLon()))
+                    .title(item.getTitle()).snippet(item.getAddress()));
+        }
         if(gps!=null){
             map.addMarker(new MarkerOptions()
                     .position(new LatLng(gps.getLatitude(), gps.getLongitude()))
-                    .title("현재위치").snippet(gps.getLatitude() + " / "+ gps.getLongitude()));
+                    .title("현재위치").snippet(address));
             map.moveCamera(CameraUpdateFactory.newLatLng(RESTRAUNT));
             map.animateCamera(CameraUpdateFactory.zoomTo(15));
         }
