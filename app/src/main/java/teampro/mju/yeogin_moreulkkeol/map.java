@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,15 +33,20 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.skp.Tmap.TMapPoint;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-
+import com.skp.Tmap.TMapData;
+import com.skp.Tmap.TMapPoint;
+import com.skp.Tmap.TMapPolyLine;
+import com.skp.Tmap.TMapTapi;
+import com.google.android.gms.maps.model.PolylineOptions;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -89,9 +95,8 @@ public class map extends Fragment implements OnMapReadyCallback, GoogleMap.OnMap
     private boolean isPermission = false;
 
     // GPSTracker class
-    private GoogleMap googleMap;
     private GpsInfo gps;
-//    ArrayList<TMapPoint> arrayPoint;
+    ArrayList<TMapPoint> arrayPoint;
 
     public map() {
         // Required empty public constructor
@@ -513,9 +518,11 @@ public class map extends Fragment implements OnMapReadyCallback, GoogleMap.OnMap
         }
         return nowAddress;
     }
-    @Override
-    public void onMapReady(GoogleMap map) {
+    GoogleMap map;TMapTapi tmaptapi;
 
+    @Override
+    public void onMapReady(GoogleMap googlemap) {
+        map = googlemap;
         MapsInitializer.initialize(getContext());
 
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -544,9 +551,161 @@ public class map extends Fragment implements OnMapReadyCallback, GoogleMap.OnMap
 //        map.addMarker(new MarkerOptions()
 //                .position(new LatLng(0, 0))
 //                .title("Marker"));
+        // T map 앱 연동
+        tmaptapi = new TMapTapi(context);
+        tmaptapi.setSKPMapAuthentication ("0e8241cf-d107-4d3d-b881-faa7677db94b");
+        tmaptapi.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback() {
+            @Override
+            public void SKPMapApikeySucceed() {
+                Log.d("sl","성공");
+                Toast.makeText(context,"성공",Toast.LENGTH_LONG).show();
+            }
+            @Override
+            public void SKPMapApikeyFailed(String errorMsg) {
+                Log.d("sl","실패");
+                Log.d("sl", errorMsg);
+                Toast.makeText(context,"실패",Toast.LENGTH_LONG).show();
+            }
 
+            @Override
+            public void SKPMapBizAppIdSucceed() {
+
+            }
+
+            @Override
+            public void SKPMapBizAppIdFailed(String s) {
+
+            }
+        });
+        tmaptapi.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback() {
+            @Override
+            public void SKPMapApikeySucceed() {
+                Log.d("","락스크린 SKPMapApikeySucceed");
+            }
+
+            @Override
+            public void SKPMapApikeyFailed(String s) {
+                Log.d("","락스크린 SKPMapApikeyFailed"+s);
+            }
+
+            @Override
+            public void SKPMapBizAppIdSucceed() {
+                Log.d("락스크린 ","SKPMapBizAppIdSucceed");
+
+            }
+
+            @Override
+            public void SKPMapBizAppIdFailed(String s) {
+
+                Log.d("락스크린 ","SKPMapBizAppIdFailed"+s);
+            }
+        });
+        Log.d("락스크린 tmaptapi",tmaptapi.getMnoInfoString());
+        //마커클릭리스너 구글맵에 경로를 그려준다
+        setOnMarkerClickListener();
     }
+    PolylineOptions polylineOptions;
+    //마커클릭리스너
+    public void setOnMarkerClickListener(){
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+//                String markertitle = marker.getTitle();
+//                SerachToTalMaker();// 맵초기화 마커 카테고리전체 다시찍기
+//                final String text = "latitude ="
+//                        + marker.getPosition().latitude + "\nlongitude ="
+//                        + marker.getPosition().longitude;
+//                Toast.makeText(getContext(), text, Toast.LENGTH_SHORT)
+//                        .show();
+
+//                marker.showInfoWindow();//마커 정보창 보이기
+                //APIRequest.setAppKey("##APPKEY_INPUTHERE##");
+
+                //POI 검색, 경로검색 등의 지도데이터를 관리하는 클래스
+                TMapData tmapdata = new TMapData();
+
+                arrayPoint = null;
+                //출발지 목적지 위도,경도 설정 - 티맵
+                TMapPoint startpoint = new TMapPoint(gps.getLatitude(), gps.getLongitude());
+                TMapPoint endpoint = new TMapPoint(marker.getPosition().latitude, marker.getPosition().longitude);
+
+                Log.d("맵 startpoint",gps.getLatitude()+"/"+gps.getLongitude());
+                Log.d("맵 endpoint",marker.getPosition().latitude+"/"+marker.getPosition().longitude);
+
+                try {
+                    TMapPolyLine tMapPolyLine = new TMapData().findPathData(startpoint, endpoint);
+                    tMapPolyLine.setLineColor(Color.BLUE);
+                    tMapPolyLine.setLineWidth(2);
+//                                    tMapView.addTMapPolyLine("Line1", tMapPolyLine);
+
+                }catch(Exception e) {
+                    e.printStackTrace();
+                }
+
+                tmapdata.findPathDataWithType(TMapData.TMapPathType.PEDESTRIAN_PATH, startpoint, endpoint,//보행자경로찾기,출발지,목적지
+                        new TMapData.FindPathDataListenerCallback() {
+                            @Override
+                            public void onFindPathData(TMapPolyLine polyLine) {
+                                Log.d(" onFindPathData","");
+                                arrayPoint = polyLine.getLinePoint();
+                                final double distance = polyLine.getDistance(); // double 이동거리를 리턴
+
+
+                                //mMapView.addTMapPath(polyLine); 티맵에 경로그리기
+
+
+                                //구글맵에 경로그리기
+                                LatLng startLatLng = new LatLng(gps.getLatitude(), gps.getLongitude());
+                                polylineOptions = new PolylineOptions();
+                                polylineOptions.width(20).color(Color.BLUE).add(startLatLng);
+                                for(int i =0;i<arrayPoint.size();++i){
+                                    TMapPoint tMapPoint = arrayPoint.get(i);
+                                    LatLng point = new LatLng(tMapPoint.getLatitude(), tMapPoint.getLongitude());
+                                    polylineOptions.add(point);
+                                }
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //... UI 업데이트 작업
+//                                        Toast.makeText(getContext(),"이동거리 : "+String.valueOf((int)distance), Toast.LENGTH_SHORT)
+//                                                .show();
+                                        //map.clear();// 경로를지워준다
+                                        map.addPolyline(polylineOptions);
+                                        Log.d(" run()","map.addPolyline(polylineOptions)");
+                                        //도착지 마커 덧붙이기
+//                                        LatLng position = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
+//                                        String name = marker.getTitle();
+//                                        MarkerOptions markerOptions = new MarkerOptions();
+//                                        markerOptions.title(name);
+//                                        String km = String.valueOf((int)distance);
+//
+//                                        markerOptions.snippet("이동거리 : "+km+"m");
+//                                        markerOptions.position(position);
+//                                        //markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+//                                        //m0arkerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.end));//도착지마커아이콘
+//                                        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.end, 200,200)));
+//                                        //markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_cast_off_light));
+//                                        googleMap.addMarker(markerOptions).showInfoWindow();
+
+                                        //출발지 마커 생성
+//                                        MarkerOptions mOptions = new MarkerOptions();
+//                                        mOptions.title("현재위치");
+//                                        mOptions.position(GPSlatLng);
+//                                        //markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+//                                        //markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.end));//도착지마커아이콘
+//                                        mOptions.icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.start, 200,200)));
+//                                        //markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_cast_off_light));
+//                                        googleMap.addMarker(mOptions).showInfoWindow();
+                                    }
+                                });
+                            }
+                        });
+                return false;
+            }
+
+        });
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

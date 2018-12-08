@@ -40,10 +40,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cardview,parent,false);
         return new ViewHolder(v);
     }
-
+    int pos;
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         final Item item = items.get(position);
+        pos = position;
         // 카드뷰의 각 리스트의 값을 넣는다.
         // 사진, 음식점이름, 카테고리, 등록일, 즐겨찾기, 주소
 
@@ -68,7 +69,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.cardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(context, item.getTitle(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "adapter.position "+pos, Toast.LENGTH_SHORT).show();
 
 
                 Intent intent = new Intent(context, detailed_page.class);
@@ -79,8 +80,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 intent.putExtra("date", item.getDate());
                 intent.putExtra("X", item.getX());
                 intent.putExtra("Y", item.getY());
-                intent.putExtra("position",position);
+                intent.putExtra("position",pos);
                 context.startActivity(intent);
+
             }
         });
     }

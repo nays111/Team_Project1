@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Date;
 import java.util.UUID;
 
 public class writeReview extends AppCompatActivity {
@@ -22,6 +23,7 @@ public class writeReview extends AppCompatActivity {
     FirebaseDatabase fDB;
     DatabaseReference DBrf;
     int position;
+    String title;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,8 +31,8 @@ public class writeReview extends AppCompatActivity {
         setTitle("리뷰작성");
 
         Intent intent = getIntent();
-        position= intent.getIntExtra("position",0)+1;
-
+        position= intent.getIntExtra("position",0);
+        title = intent.getStringExtra("title");
 
         et_review = findViewById(R.id.et_review);
         btn_close = findViewById(R.id.btn_close);
@@ -63,7 +65,9 @@ public class writeReview extends AppCompatActivity {
     String Email;
     private void writeRivew(String review) {
         String uuid = UUID.randomUUID().toString();
-        DatabaseReference rf = DBrf.child(position+"").child("review").child(uuid);
+        Date data = new Date();
+
+        DatabaseReference rf = DBrf.child(position+"").child("review").child(data.getTime()+uuid);
         rf.child("comment").setValue(review);
         rf.child("id").setValue(id);
 

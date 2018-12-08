@@ -58,13 +58,14 @@ public class detailed_page extends AppCompatActivity implements OnMapReadyCallba
     double x;
     double y;
     FragmentManager fragmentManager;
-    ScrollView sc ;
+    ScrollView sc;
     ListView reviewList;
     FirebaseDatabase fDB;
     DatabaseReference DBrf;
     ArrayAdapter adapter;
     ArrayList<String> list;
     int position;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -86,7 +87,9 @@ public class detailed_page extends AppCompatActivity implements OnMapReadyCallba
         date = intent.getIntExtra("date", 0) + " 개업";
         x = intent.getDoubleExtra("X", 0.0D);
         y = intent.getDoubleExtra("Y", 0.0D);
-        position= intent.getIntExtra("position",0)+1;
+        position = intent.getIntExtra("position", 0) + 1;
+//        Toast.makeText(getApplicationContext(), "detailed_page.position "
+//                + intent.getIntExtra("position", 0), Toast.LENGTH_SHORT).show();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             RequestOptions requestOptions = new RequestOptions();
@@ -99,8 +102,6 @@ public class detailed_page extends AppCompatActivity implements OnMapReadyCallba
         }
 
 
-
-
         fragmentManager = getFragmentManager();
         MapFragment mapFragment = (MapFragment) fragmentManager.findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -111,8 +112,7 @@ public class detailed_page extends AppCompatActivity implements OnMapReadyCallba
         Date.setText(date);
 
 
-
-        Log.d("Detail_imageSrc",imageSrc);
+        Log.d("Detail_imageSrc", imageSrc);
         btn_writeComment = findViewById(R.id.review_button);
 
         // "리뷰 쓰기" 버튼 눌렀을 때.
@@ -120,7 +120,8 @@ public class detailed_page extends AppCompatActivity implements OnMapReadyCallba
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(detailed_page.this, writeReview.class);
-                intent.putExtra("positin",position);
+                intent.putExtra("position", position);
+                intent.putExtra("title", title);
                 startActivity(intent);
             }
         });
@@ -134,30 +135,52 @@ public class detailed_page extends AppCompatActivity implements OnMapReadyCallba
 
         fDB = FirebaseDatabase.getInstance();
         DBrf = fDB.getReference();
-        DBrf.child(position + "").child("review").addValueEventListener(new ValueEventListener() {
+        switch(title){
+            case "청춘일기": position =1; break;
+            case "장어가두근두근": position =2; break;
+            case "짬뽕킹": position =3; break;
+            case "양평해장국": position =4; break;
+            case "올리앤 용인명지대점": position =5; break;
+            case "손가네족발": position =6; break;
+        }
+
+        DBrf.child(position+"").child("review").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 adapter.clear();
 
-                // 리뷰 데이터
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+//                // 리뷰 데이터
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     reviewDTO reviewObj = snapshot.getValue(reviewDTO.class);
                     String coment = reviewObj.getComment();
                     String id = reviewObj.getId();
-                    list.add(id + " \n "+ coment);
-                    Log.d("detailPage ", "id "+id + " / coment " + coment);
+                    list.add(id + " \n " + coment);
+                    Log.d("detailPage ", "id " + id + " / coment " + coment);
                 }
-//                    DataSnapshot ds = dataSnapshot.child(position + "");
-//                        for(DataSnapshot ds2 : ds.child("review").getChildren()){
-//                            String coment = ds2.child("comment").getValue(String.class);
-//                            String id = ds2.child("id").getValue(String.class);
 //
-//                            if(coment!=null&&id!=null&&coment!=""&&id!="")
-//                                list.add(id + " \n "+ coment);
+//                for (int i = 0; i < 30; i++) {
+//                    DataSnapshot ds = dataSnapshot.child(i + "").child("review");
+//                    if (ds != null) {
+//                        Toast.makeText(getApplicationContext(),"title : "+title+" ds.getValue() : "+ds.child("name").getValue(),Toast.LENGTH_LONG).show();
+//                        if (ds.child("name").getValue().equals(title)) {
+//                            for (int l = 0; l < 30; l++) {
 //
-//                            Log.d("detailPage ", "id "+id + " / coment " + coment);
+//                                String coment = ds.child("comment").getValue(String.class);
+//                                String id = ds.child("id").getValue(String.class);
+//
+//                                if (coment != null && id != null && coment != "" && id != "")
+//                                    list.add(id + " \n " + coment);
+//
+//                                Log.d("detailPage ", "id " + id + " / coment " + coment);
+//
+//                            }
+//
 //                        }
+//                    }
+//
+//                }
+
 
                 // recyclevuew 갱신
                 adapter.notifyDataSetChanged();
